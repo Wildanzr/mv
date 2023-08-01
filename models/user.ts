@@ -4,7 +4,7 @@ import { getNextSequence } from './couter'
 const userSchema = new Schema({
   _id: {
     type: Number,
-    default: () => getNextSequence('user'),
+    default: 0,
   },
   name: {
     type: String,

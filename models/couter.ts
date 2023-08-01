@@ -14,7 +14,7 @@ const counterSchema = new Schema({
 
 const Counter = models.Counter || model('Counter', counterSchema)
 
-export async function getNextSequence(name: string): Promise<number> {
+export async function getNextSequence(name: string) {
   const count = await Counter.findByIdAndUpdate(
     name,
     { $inc: { seq: 1 } },

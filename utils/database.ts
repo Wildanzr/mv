@@ -8,7 +8,6 @@ export const connectDB = async () => {
   mongoose.set('strictQuery', true)
 
   if (isConnected) {
-    console.log('=> using existing database connection')
     return Promise.resolve()
   }
 
@@ -16,5 +15,7 @@ export const connectDB = async () => {
     await mongoose.connect(DB_URL, {
       dbName: DB_NAME,
     })
+    isConnected = true
+    console.log('=> using new database connection')
   } catch (error) {}
 }
