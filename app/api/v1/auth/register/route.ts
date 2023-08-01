@@ -1,6 +1,6 @@
 import { connectDB } from '@/utils/database'
 import { User } from '@/models'
-import { success, fail } from '@/utils/response'
+import { success, formatErrorResponse } from '@/utils/response'
 import { validateRegister } from '@/validators'
 import { hashPassword } from '@/utils/hash'
 import { checkDuplicateUsername, checkDuplicateEmail } from '@/services'
@@ -49,10 +49,6 @@ export const POST = async (req: Request) => {
       status: 200,
     })
   } catch (error) {
-    const response = fail((error as Error).message)
-
-    return new Response(JSON.stringify(response), {
-      status: 500,
-    })
+    return formatErrorResponse(error as Error)
   }
 }

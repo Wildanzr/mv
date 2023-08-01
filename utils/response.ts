@@ -13,3 +13,11 @@ export const fail = (message: string) => {
     data: null,
   }
 }
+
+export const formatErrorResponse = (error: Error): Response => {
+  const response = fail((error as Error).message)
+
+  return new Response(JSON.stringify(response), {
+    status: 500,
+  })
+}
