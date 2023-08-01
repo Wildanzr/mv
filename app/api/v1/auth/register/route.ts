@@ -1,9 +1,11 @@
 import { connectDB } from '@/utils/database'
-import { User } from '@/models'
 import { success, formatErrorResponse } from '@/utils/response'
 import { validateRegister } from '@/validators'
-import { hashPassword } from '@/utils/hash'
-import { checkDuplicateUsername, checkDuplicateEmail } from '@/services'
+import {
+  checkDuplicateUsername,
+  checkDuplicateEmail,
+  createUser,
+} from '@/services/user'
 
 export const POST = async (req: Request) => {
   /* 
@@ -25,30 +27,12 @@ export const POST = async (req: Request) => {
       password,
       photo,
     }
-
     validateRegister(user)
     await checkDuplicateUsername(user.username)
     await checkDuplicateEmail(user.email)
-    const hashedPassword = await hashPassword(password)
-    user.password = hashedPassword
-    await User.create({
-      _id: 0,
-      name: user.name,
-      username: user.username,
-      email: user.email,
-      password: user.password,
-      photo: user.photo,
-    })
-    const response = success('Your account has been sucessfully created', {
-      name: user.name,
-      username: user.username,
-      email: user.email,
-      photo: user.photo,
-    })
-    return new Response(JSON.stringify(response), {
-      status: 200,
-    })
+    const newUser = await createUser(user)
+    return success('Your account has been sucessfully created', newUser, 201)
   } catch (error) {
-    return formatErrorResponse(error as Error)
+    return formatErrorResponse(error as Error, 500)
   }
 }

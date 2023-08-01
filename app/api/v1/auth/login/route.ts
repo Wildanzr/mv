@@ -1,15 +1,28 @@
+import { connectDB } from '@/utils/database'
+import { success, formatErrorResponse } from '@/utils/response'
+import { validateLogin } from '@/validators'
+import { checkLoginCredentials } from '@/services/user'
+import { signToken } from '@/utils/tokenization'
+
 export const POST = async (req: Request) => {
   /* 
     Login flow:
     1. Connect to database
     2. Validate request body
-    3. Check any user with the given username
-    4. Check if password is correct
-    5. Build JWT payload
-    6. Sign JWT
-    7. Return response
+    3. Check any user with the given username and make sure password is correct
+    4. Build JWT payload
+    5. Sign JWT
+    6. Return response
   */
 
   try {
-  } catch (error) {}
+    await connectDB()
+    const { username, password } = await req.json()
+    validateLogin({ username, password })
+    const user = await checkLoginCredentials(username, password)
+    const token = signToken(user)
+    return success('Successfully logged in', { token }, 200)
+  } catch (error) {
+    return formatErrorResponse(error as Error, 400)
+  }
 }
