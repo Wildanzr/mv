@@ -42,3 +42,10 @@ export const updatePost = async (
   if (!willUpdatePost) throw new ClientError('Failed to update post', 500)
   return await getPostWithUser(postId)
 }
+
+export const deletePost = async (postId: number) => {
+  const post = await Post.findById(postId)
+  if (!post) throw new ClientError('Post not found', 404)
+  const willDeletePost = await Post.findByIdAndDelete(postId)
+  if (!willDeletePost) throw new ClientError('Failed to delete post', 500)
+}

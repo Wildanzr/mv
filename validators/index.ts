@@ -37,3 +37,9 @@ export const createPostSchema = Joi.object({
   caption: Joi.string().min(1).max(1000).required(),
   tags: Joi.string().min(2).max(500).required(),
 })
+
+export const updatePostSchema = Joi.object({
+  image: Joi.string().uri().required(),
+  caption: Joi.string().min(1).max(1000).required(),
+  tags: Joi.string().min(2).max(500).required(),
+})
