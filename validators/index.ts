@@ -31,3 +31,9 @@ export const changePasswordSchema = Joi.object({
   newPassword: Joi.string().min(8).max(50).required(),
   confirmNewPassword: Joi.required().valid(Joi.ref('newPassword')),
 })
+
+export const createPostSchema = Joi.object({
+  image: Joi.string().uri().required(),
+  caption: Joi.string().min(1).max(1000).required(),
+  tags: Joi.string().min(2).max(500).required(),
+})

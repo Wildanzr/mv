@@ -21,6 +21,12 @@ declare global {
     createdAt: string
     updatedAt: string
   }
+  interface DetailUser {
+    name: string
+    username: string
+    email: string
+    photo: string
+  }
   interface CreateUserDTO {
     name: string
     username: string
@@ -51,5 +57,30 @@ declare global {
     oldPassword: string
     newPassword: string
     confirmNewPassword: string
+  }
+  interface Post {
+    _id?: number
+    userId: number
+    caption: string
+    tags: string
+    likes: number
+    image: string
+    createdAt?: Date
+    updatedAt?: Date
+  }
+  interface CreatePostDTO {
+    image: string
+    caption: string
+    tags: string
+  }
+  interface PostWithUser {
+    _id?: number
+    image: string
+    caption: string
+    tags: string
+    likes: number
+    createdAt: Date
+    updatedAt: Date
+    userId: DetailUser
   }
 }

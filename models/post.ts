@@ -9,14 +9,17 @@ const postSchema = new Schema({
   userId: {
     type: Schema.Types.Number,
     ref: 'User',
+    required: true,
   },
   caption: {
     type: String,
     default: '',
+    required: true,
   },
   tags: {
     type: String,
     default: '',
+    required: true,
   },
   likes: {
     type: Number,
@@ -25,6 +28,7 @@ const postSchema = new Schema({
   image: {
     type: String,
     default: '',
+    required: true,
   },
   createdAt: {
     type: Date,
