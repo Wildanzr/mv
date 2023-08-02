@@ -1,4 +1,4 @@
-import { likePost } from '@/services/post'
+import { unlikePost } from '@/services/post'
 import { connectDB } from '@/utils/database'
 import ClientError from '@/utils/error'
 import { formatErrorResponse, success } from '@/utils/response'
@@ -6,11 +6,11 @@ import { getTokenFromRequest, verifyToken } from '@/utils/tokenization'
 
 export const PUT = async (req: Request, params: PostParams) => {
   /*
-    Like post flow:
+    Unlike post flow:
     1. Check authorization header
     2. Validate JWT
     3. Connect to database
-    4. Check if post exist, then like it
+    4. Check if post exist, then unlike it
     5. Return response
     */
 
@@ -20,9 +20,9 @@ export const PUT = async (req: Request, params: PostParams) => {
     const { id: postId } = params.params
     if (isNaN(postId)) throw new ClientError('Post id must be a number', 400)
     await connectDB()
-    await likePost(postId, _id)
+    await unlikePost(postId, _id)
 
-    return success('Sucessfully liked post', null, 200)
+    return success('Sucessfully unliked post', null, 200)
   } catch (error) {
     return formatErrorResponse(error)
   }

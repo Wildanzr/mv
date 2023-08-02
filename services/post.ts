@@ -51,13 +51,27 @@ export const deletePost = async (postId: number) => {
 }
 
 export const likePost = async (postId: number, userId: number) => {
-  const checkLikedBefore = await UserLiked.findOne({ userId, postId })
-  if (checkLikedBefore) throw new ClientError('You already liked this post', 400)
   const post = await Post.findById(postId)
   if (!post) throw new ClientError('Post not found', 404)
+  const checkLikedBefore = await UserLiked.findOne({ userId, postId })
+  if (checkLikedBefore) throw new ClientError('You already liked this post', 400)
   const willLikePost = await Post.findByIdAndUpdate(postId, {
     likes: post.likes + 1,
+    updatedAt: Date.now(),
   })
   await UserLiked.create({ userId, postId })
   if (!willLikePost) throw new ClientError('Failed to like post', 500)
+}
+
+export const unlikePost = async (postId: number, userId: number) => {
+  const post = await Post.findById(postId)
+  if (!post) throw new ClientError('Post not found', 404)
+  const checkLikedBefore = await UserLiked.findOne({ userId, postId })
+  if (!checkLikedBefore) throw new ClientError('You are not liked this post before', 400)
+  const willUnlikePost = await Post.findByIdAndUpdate(postId, {
+    likes: post.likes - 1,
+    updatedAt: Date.now(),
+  })
+  await UserLiked.findOneAndDelete({ userId, postId })
+  if (!willUnlikePost) throw new ClientError('Failed to unlike post', 500)
 }
