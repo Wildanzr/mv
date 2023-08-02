@@ -73,6 +73,11 @@ declare global {
     caption: string
     tags: string
   }
+  interface UpdatePostDTO {
+    image: string
+    caption: string
+    tags: string
+  }
   interface PostWithUser {
     _id?: number
     image: string
@@ -82,5 +87,11 @@ declare global {
     createdAt: Date
     updatedAt: Date
     userId: DetailUser
+  }
+
+  interface PostParams {
+    params: {
+      id: number
+    }
   }
 }

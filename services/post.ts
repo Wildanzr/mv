@@ -2,9 +2,7 @@ import { Post } from '@/models'
 import ClientError from '@/utils/error'
 import { getUserById } from './user'
 
-export const getPostWithUser = async (
-  postId: number
-): Promise<PostWithUser> => {
+export const getPostWithUser = async (postId: number): Promise<PostWithUser> => {
   const post = (await Post.findById(postId)
     .populate('userId', 'name username email photo')
     .lean()) as unknown as PostWithUser
@@ -14,10 +12,9 @@ export const getPostWithUser = async (
 
 export const createPost = async (
   userId: number,
-  caption: string,
-  tags: string,
-  image: string
+  payload: CreatePostDTO
 ): Promise<PostWithUser> => {
+  const { caption, tags, image } = payload
   const user = await getUserById(userId)
   if (!user) throw new ClientError('User not found', 404)
 
@@ -29,4 +26,19 @@ export const createPost = async (
   })) as unknown as Post
   if (!post) throw new ClientError('Failed to create post', 500)
   return await getPostWithUser(post._id as number)
+}
+
+export const updatePost = async (
+  postId: number,
+  payload: UpdatePostDTO
+): Promise<PostWithUser> => {
+  const { caption, tags, image } = payload
+  const willUpdatePost = await Post.findByIdAndUpdate(postId, {
+    caption,
+    tags,
+    image,
+    updatedAt: Date.now(),
+  })
+  if (!willUpdatePost) throw new ClientError('Failed to update post', 500)
+  return await getPostWithUser(postId)
 }

@@ -1,27 +1,26 @@
-import { createPost } from '@/services/post'
-import { connectDB } from '@/utils/database'
+import { updatePost } from '@/services/post'
+import ClientError from '@/utils/error'
 import { formatErrorResponse, success } from '@/utils/response'
 import { getTokenFromRequest, verifyToken } from '@/utils/tokenization'
-import { createPostSchema, validatePayload } from '@/validators'
 
-export const POST = async (req: Request) => {
+export const PUT = async (req: Request, params: PostParams) => {
   /* 
-    Create post flow:
+    Update post flow:
     1. Check authorization header
     2. Validate JWT
     3. Validate payload
     4. Connect to database
-    5. Create post
+    5. Update post
     6. Return response
-    */
+  */
 
   try {
     const authorization = getTokenFromRequest(req)
-    const { _id } = verifyToken(authorization)
-    const { image, caption, tags } = (await req.json()) as CreatePostDTO
-    validatePayload({ image, caption, tags }, createPostSchema)
-    await connectDB()
-    const post = await createPost(_id, { caption, tags, image })
+    verifyToken(authorization)
+    const { id: postId } = params.params
+    const { caption, image, tags } = (await req.json()) as UpdatePostDTO
+    if (isNaN(postId)) throw new ClientError('Post id must be a number', 400)
+    const post = await updatePost(postId, { caption, image, tags })
     const payload = {
       image: post.image,
       caption: post.caption,
@@ -37,7 +36,7 @@ export const POST = async (req: Request) => {
       },
     }
 
-    return success('Successfully create post', payload, 201)
+    return success('Successfully update post', payload, 200)
   } catch (error) {
     return formatErrorResponse(error)
   }
