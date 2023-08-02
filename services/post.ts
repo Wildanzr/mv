@@ -75,3 +75,17 @@ export const unlikePost = async (postId: number, userId: number) => {
   await UserLiked.findOneAndDelete({ userId, postId })
   if (!willUnlikePost) throw new ClientError('Failed to unlike post', 500)
 }
+
+export const getPostList = async (payload: PostQuery): Promise<PostList> => {
+  const { page, limit, searchBy, search } = payload
+  const skip = (page - 1) * limit
+  const query = search ? { [searchBy]: { $regex: search, $options: 'i' } } : {}
+  const posts = (await Post.find(query)
+    .populate('userId', 'name username email photo')
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit)
+    .lean()) as PostWithUser[]
+  const total = await Post.countDocuments(query)
+  return { posts, total }
+}

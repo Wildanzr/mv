@@ -43,3 +43,10 @@ export const updatePostSchema = Joi.object({
   caption: Joi.string().min(1).max(1000).required(),
   tags: Joi.string().min(2).max(500).required(),
 })
+
+export const postQuerySchema = Joi.object({
+  page: Joi.number().min(1).required(),
+  limit: Joi.number().min(1).max(200).required(),
+  searchBy: Joi.string().valid('caption', 'tags').required(),
+  search: Joi.string().min(1).max(100).required(),
+})

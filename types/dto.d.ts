@@ -79,7 +79,7 @@ declare global {
     tags: string
   }
   interface PostWithUser {
-    _id?: number
+    _id: number
     image: string
     caption: string
     tags: string
@@ -88,10 +88,36 @@ declare global {
     updatedAt: Date
     userId: DetailUser
   }
-
   interface PostParams {
     params: {
       id: number
+    }
+  }
+  interface PostQuery {
+    page: number
+    limit: number
+    searchBy: 'caption' | 'tags'
+    search: string
+  }
+
+  interface PostList {
+    posts: PostWithUser[]
+    total: number
+  }
+
+  interface PostListDTO {
+    id: number
+    image: string
+    caption: string
+    tags: string
+    likes: number
+    createdAt: Date
+    updatedAt: Date
+    user: {
+      name: string
+      username: string
+      email: string
+      photo: string
     }
   }
 }

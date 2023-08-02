@@ -1,10 +1,11 @@
 import ClientError from './error'
 
-export const success = (message: string, data: any, status: number) => {
+export const success = (message: string, data: any, status: number, pagination?: any) => {
   const payload = {
     success: true,
     message: message,
     data: data,
+    pagination,
   }
   return new Response(JSON.stringify(payload), {
     status: status,

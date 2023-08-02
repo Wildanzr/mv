@@ -1,8 +1,12 @@
-import { createPost } from '@/services/post'
+import { createPost, getPostList } from '@/services/post'
+import { getPostQuery, mapPostListDTO } from '@/utils'
 import { connectDB } from '@/utils/database'
 import { formatErrorResponse, success } from '@/utils/response'
 import { getTokenFromRequest, verifyToken } from '@/utils/tokenization'
-import { createPostSchema, validatePayload } from '@/validators'
+import { createPostSchema, postQuerySchema, validatePayload } from '@/validators'
+import { NextApiRequest } from 'next'
+
+const HOST_URL = process.env.HOST_URL || 'http://localhost:3000'
 
 export const POST = async (req: Request) => {
   /* 
@@ -38,6 +42,38 @@ export const POST = async (req: Request) => {
     }
 
     return success('Successfully create post', payload, 201)
+  } catch (error) {
+    return formatErrorResponse(error)
+  }
+}
+
+export const GET = async (req: NextApiRequest) => {
+  /*
+    Get list post flow:
+    1. Check authorization header
+    2. Validate JWT
+    3. Get query params
+    4. Validate query params
+    5. Connect to database
+    6. Get list post
+    7. Return response
+  */
+
+  try {
+    const authorization = getTokenFromRequest(req as unknown as Request)
+    verifyToken(authorization)
+    const { page, limit, searchBy, search } = getPostQuery(req.url as string)
+    validatePayload({ page, limit, searchBy, search }, postQuerySchema)
+    await connectDB()
+    const { posts, total } = await getPostList({ page, limit, searchBy, search })
+    const payload = mapPostListDTO(posts)
+    const pagination = {
+      total,
+      page,
+      limit,
+    }
+
+    return success('Successfully get list post', payload, 200, pagination)
   } catch (error) {
     return formatErrorResponse(error)
   }
