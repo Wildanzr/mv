@@ -6,8 +6,6 @@ import { getTokenFromRequest, verifyToken } from '@/utils/tokenization'
 import { createPostSchema, postQuerySchema, validatePayload } from '@/validators'
 import { NextApiRequest } from 'next'
 
-const HOST_URL = process.env.HOST_URL || 'http://localhost:3000'
-
 export const POST = async (req: Request) => {
   /* 
     Create post flow:
