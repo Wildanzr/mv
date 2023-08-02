@@ -1,4 +1,4 @@
-import { Post } from '@/models'
+import { Post, UserLiked } from '@/models'
 import ClientError from '@/utils/error'
 import { getUserById } from './user'
 
@@ -48,4 +48,16 @@ export const deletePost = async (postId: number) => {
   if (!post) throw new ClientError('Post not found', 404)
   const willDeletePost = await Post.findByIdAndDelete(postId)
   if (!willDeletePost) throw new ClientError('Failed to delete post', 500)
+}
+
+export const likePost = async (postId: number, userId: number) => {
+  const checkLikedBefore = await UserLiked.findOne({ userId, postId })
+  if (checkLikedBefore) throw new ClientError('You already liked this post', 400)
+  const post = await Post.findById(postId)
+  if (!post) throw new ClientError('Post not found', 404)
+  const willLikePost = await Post.findByIdAndUpdate(postId, {
+    likes: post.likes + 1,
+  })
+  await UserLiked.create({ userId, postId })
+  if (!willLikePost) throw new ClientError('Failed to like post', 500)
 }
