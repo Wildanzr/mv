@@ -19,14 +19,15 @@ export const POST = async (req: Request) => {
   */
   try {
     await connectDB()
-    const { name, username, email, password, photo } = await req.json()
+    const { name, username, email, password, photo } =
+      (await req.json()) as RegisterDTO
     const user = {
       name,
       username,
       email,
       password,
       photo,
-    }
+    } as User
     validatePayload(user, registerSchema)
     await checkDuplicateUsername(user.username)
     await checkDuplicateEmail(user.email)

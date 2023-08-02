@@ -34,4 +34,17 @@ declare global {
     iss: string
     sub: string
   }
+  interface RegisterDTO {
+    name: string
+    username: string
+    email: string
+    password: string
+    photo: string
+  }
+  interface UpdateUserDTO {
+    name: string
+    username: string
+    email: string
+    photo: string
+  }
 }

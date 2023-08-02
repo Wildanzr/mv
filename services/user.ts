@@ -47,3 +47,38 @@ export const getUserById = async (id: number): Promise<GetUserDTO> => {
   if (!user) throw new ClientError('User not found', 404)
   return user
 }
+
+export const updateUserProfile = async (
+  _id: number,
+  user: UpdateUserDTO
+): Promise<GetUserDTO> => {
+  const willUpdateUser = await User.findByIdAndUpdate(_id, {
+    username: user.username,
+    email: user.email,
+    name: user.name,
+    photo: user.photo,
+    updatedAt: Date.now(),
+  })
+
+  if (!willUpdateUser) throw new ClientError('Failed to update user', 500)
+
+  return await getUserById(_id)
+}
+
+export const checkNewUsernameAndEmail = async (
+  _id: number,
+  username: string,
+  email: string
+) => {
+  // find user with username or email same but not with the same id
+  const user = await User.findOne({
+    $or: [{ username }, { email }],
+    _id: { $ne: _id },
+  })
+  if (user) {
+    if (user.username === username)
+      throw new ClientError('Username already taken', 400)
+
+    if (user.email === email) throw new ClientError('Email already taken', 400)
+  }
+}
