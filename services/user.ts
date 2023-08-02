@@ -82,3 +82,19 @@ export const checkNewUsernameAndEmail = async (
     if (user.email === email) throw new ClientError('Email already taken', 400)
   }
 }
+
+export const changePassword = async (
+  _id: number,
+  oldPassword: string,
+  newPassword: string
+) => {
+  const { password: hash } = await User.findById(_id).select('password')
+  if (!hash) throw new ClientError('User not found', 404)
+  const isMatch = await comparePassword(oldPassword, hash)
+  if (!isMatch) throw new ClientError('Invalid old password', 400)
+  const update = await User.findByIdAndUpdate(_id, {
+    password: await hashPassword(newPassword),
+    updatedAt: Date.now(),
+  })
+  if (!update) throw new ClientError('Failed to update password', 500)
+}

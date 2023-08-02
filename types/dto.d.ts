@@ -10,8 +10,8 @@ declare global {
     email: string
     password: string
     photo: string
-    createdAt?: string
-    updatedAt?: string
+    createdAt?: Date
+    updatedAt?: Date
   }
   interface GetUserDTO {
     name: string
@@ -46,5 +46,10 @@ declare global {
     username: string
     email: string
     photo: string
+  }
+  interface ChangePasswordDTO {
+    oldPassword: string
+    newPassword: string
+    confirmNewPassword: string
   }
 }

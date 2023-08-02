@@ -25,3 +25,9 @@ export const updateUserSchema = Joi.object({
   email: Joi.string().email().required(),
   photo: Joi.string().uri().required(),
 })
+
+export const changePasswordSchema = Joi.object({
+  oldPassword: Joi.string().min(8).max(50).required(),
+  newPassword: Joi.string().min(8).max(50).required(),
+  confirmNewPassword: Joi.required().valid(Joi.ref('newPassword')),
+})
