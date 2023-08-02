@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import { formatErrorResponse } from './response'
 
 const DB_URL = process.env.DB_URL || 'mongodb://localhost:27017'
 const DB_NAME = process.env.DB_NAME || 'mv'
@@ -16,6 +17,7 @@ export const connectDB = async () => {
       dbName: DB_NAME,
     })
     isConnected = true
-    console.log('=> using new database connection')
-  } catch (error) {}
+  } catch (error) {
+    return formatErrorResponse(error)
+  }
 }

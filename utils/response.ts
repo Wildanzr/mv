@@ -1,3 +1,5 @@
+import ClientError from './error'
+
 export const success = (message: string, data: any, status: number) => {
   const payload = {
     success: true,
@@ -17,10 +19,11 @@ export const fail = (message: string) => {
   }
 }
 
-export const formatErrorResponse = (error: Error, status: number): Response => {
-  const response = fail((error as Error).message)
+export const formatErrorResponse = (error: any): Response => {
+  const { message = 'Error', status = 500 } = error as ClientError
+  const response = fail(message)
 
   return new Response(JSON.stringify(response), {
-    status: status,
+    status,
   })
 }

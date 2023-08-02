@@ -1,28 +1,23 @@
 import { User } from '@/models'
+import ClientError from '@/utils/error'
 import { comparePassword, hashPassword } from '@/utils/hash'
 
 export const checkDuplicateUsername = async (username: string) => {
   const user = await User.findOne({ username })
-  if (user) throw new Error('Username already exists')
+  if (user) throw new ClientError('Username already exists', 400)
 }
 
 export const checkDuplicateEmail = async (email: string) => {
   const user = await User.findOne({ email })
-  if (user) throw new Error('Email already exists')
+  if (user) throw new ClientError('Email already exists', 400)
 }
 
 export const createUser = async (user: User) => {
   const hashedPassword = await hashPassword(user.password)
   user.password = hashedPassword
-  await User.create({
-    _id: 0,
-    name: user.name,
-    username: user.username,
-    email: user.email,
-    password: user.password,
-    photo: user.photo,
-  })
-
+  const newUser = new User({ _id: 0, ...user })
+  await newUser.save()
+  if (!newUser) throw new ClientError('Failed to create user', 500)
   return {
     name: user.name,
     username: user.username,
@@ -36,16 +31,11 @@ export const checkLoginCredentials = async (
   password: string
 ): Promise<User> => {
   const user = await User.findOne({ username })
-  if (!user) throw new Error('Invalid username or password')
+  if (!user) throw new ClientError('Invalid username or password', 401)
 
   const isPasswordMatch = await comparePassword(password, user.password)
-  if (!isPasswordMatch) throw new Error('Invalid username or password')
+  if (!isPasswordMatch)
+    throw new ClientError('Invalid username or password', 401)
 
-  return {
-    name: user.name,
-    username: user.username,
-    email: user.email,
-    password: user.password,
-    photo: user.photo,
-  }
+  return user
 }

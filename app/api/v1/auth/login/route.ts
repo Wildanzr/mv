@@ -1,6 +1,6 @@
 import { connectDB } from '@/utils/database'
 import { success, formatErrorResponse } from '@/utils/response'
-import { validateLogin } from '@/validators'
+import { validatePayload, loginSchema } from '@/validators'
 import { checkLoginCredentials } from '@/services/user'
 import { signToken } from '@/utils/tokenization'
 
@@ -18,11 +18,11 @@ export const POST = async (req: Request) => {
   try {
     await connectDB()
     const { username, password } = await req.json()
-    validateLogin({ username, password })
+    validatePayload({ username, password }, loginSchema)
     const user = await checkLoginCredentials(username, password)
     const token = signToken(user)
     return success('Successfully logged in', { token }, 200)
   } catch (error) {
-    return formatErrorResponse(error as Error, 400)
+    return formatErrorResponse(error)
   }
 }

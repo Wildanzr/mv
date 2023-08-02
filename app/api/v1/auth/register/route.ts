@@ -1,6 +1,6 @@
 import { connectDB } from '@/utils/database'
 import { success, formatErrorResponse } from '@/utils/response'
-import { validateRegister } from '@/validators'
+import { validatePayload, registerSchema } from '@/validators'
 import {
   checkDuplicateUsername,
   checkDuplicateEmail,
@@ -27,12 +27,12 @@ export const POST = async (req: Request) => {
       password,
       photo,
     }
-    validateRegister(user)
+    validatePayload(user, registerSchema)
     await checkDuplicateUsername(user.username)
     await checkDuplicateEmail(user.email)
     const newUser = await createUser(user)
     return success('Your account has been sucessfully created', newUser, 201)
   } catch (error) {
-    return formatErrorResponse(error as Error, 500)
+    return formatErrorResponse(error)
   }
 }
