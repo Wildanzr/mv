@@ -1,4 +1,4 @@
-import { deletePost, updatePost } from '@/services/post'
+import { deletePost, getPostWithUser, updatePost } from '@/services/post'
 import { connectDB } from '@/utils/database'
 import ClientError from '@/utils/error'
 import { formatErrorResponse, success } from '@/utils/response'
@@ -65,6 +65,45 @@ export const DELETE = async (req: Request, params: PostParams) => {
     await deletePost(postId)
 
     return success('Successfully delete post', null, 200)
+  } catch (error) {
+    return formatErrorResponse(error)
+  }
+}
+
+export const GET = async (req: Request, params: PostParams) => {
+  /*
+    Get post flow:
+    1. Check authorization header
+    2. Validate JWT
+    3. Connect to database
+    4. Get post
+    5. Return response
+  */
+
+  try {
+    const authorization = getTokenFromRequest(req)
+    verifyToken(authorization)
+    const { id: postId } = params.params
+    if (isNaN(postId)) throw new ClientError('Post id must be a number', 400)
+    await connectDB()
+    const post = await getPostWithUser(postId)
+    const payload = {
+      id: post._id,
+      image: post.image,
+      caption: post.caption,
+      tags: post.tags,
+      likes: post.likes,
+      createdAt: post.createdAt,
+      updatedAt: post.updatedAt,
+      user: {
+        name: post.userId.name,
+        username: post.userId.username,
+        email: post.userId.email,
+        photo: post.userId.photo,
+      },
+    }
+
+    return success('Successfully get post', payload, 200)
   } catch (error) {
     return formatErrorResponse(error)
   }
