@@ -12,7 +12,7 @@ export const checkDuplicateEmail = async (email: string) => {
   if (user) throw new ClientError('Email already exists', 400)
 }
 
-export const createUser = async (user: User) => {
+export const createUser = async (user: User): Promise<CreateUserDTO> => {
   const hashedPassword = await hashPassword(user.password)
   user.password = hashedPassword
   const newUser = new User({ _id: 0, ...user })
@@ -37,5 +37,13 @@ export const checkLoginCredentials = async (
   if (!isPasswordMatch)
     throw new ClientError('Invalid username or password', 401)
 
+  return user
+}
+
+export const getUserById = async (id: number): Promise<GetUserDTO> => {
+  const user = User.findById(id).select(
+    'name username email photo createdAt updatedAt'
+  )
+  if (!user) throw new ClientError('User not found', 404)
   return user
 }

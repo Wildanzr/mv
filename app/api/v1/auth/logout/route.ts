@@ -1,6 +1,6 @@
 import ClientError from '@/utils/error'
 import { formatErrorResponse, success } from '@/utils/response'
-import { verifyToken } from '@/utils/tokenization'
+import { getTokenFromRequest, verifyToken } from '@/utils/tokenization'
 
 export const POST = async (req: Request) => {
   /* 
@@ -11,12 +11,8 @@ export const POST = async (req: Request) => {
     */
 
   try {
-    const authorization = req.headers.get('authorization')
-    if (!authorization) {
-      throw new ClientError('Authorization header is missing', 400)
-    }
+    const authorization = getTokenFromRequest(req)
     verifyToken(authorization)
-
     return success('Successfully logged out', null, 200)
   } catch (error) {
     return formatErrorResponse(error)
