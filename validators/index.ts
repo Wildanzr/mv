@@ -3,7 +3,8 @@ import Joi from 'joi'
 
 export const validatePayload = (payload: any, schema: Joi.Schema<any>) => {
   const { error } = schema.validate(payload)
-  if (error) throw new ClientError(error.message, 400)
+  const message = error?.message.replace(/['"]+/g, '') || 'Invalid payload'
+  if (error) throw new ClientError(message, 400)
 }
 
 export const registerSchema = Joi.object({
@@ -49,4 +50,12 @@ export const postQuerySchema = Joi.object({
   limit: Joi.number().min(1).max(200).required(),
   searchBy: Joi.string().valid('caption', 'tags').required(),
   search: Joi.string().min(1).max(100).required(),
+})
+
+export const uploadImageSchema = Joi.object({
+  mimetype: Joi.string().valid('image/jpeg', 'image/png').required(),
+  size: Joi.number()
+    .integer()
+    .max(2 * 1024 * 1024)
+    .required(), // 2MB
 })
