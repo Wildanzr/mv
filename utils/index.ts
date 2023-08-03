@@ -1,3 +1,7 @@
+import ClientError from '@/utils/error'
+import { mkdir, stat } from 'fs/promises'
+import { extname } from 'path'
+
 export const getPostQuery = (url: string): PostQuery => {
   const urlObject = new URL(url)
   const queryParams = urlObject.searchParams
@@ -26,4 +30,29 @@ export const mapPostListDTO = (post: PostWithUser[]): PostListDTO[] => {
       photo: item.userId.photo,
     },
   }))
+}
+
+export const sanitizeFilename = (filename: string): string => {
+  return filename.replace(/[^a-zA-Z0-9_\u0600-\u06FF.]/g, '_')
+}
+
+export const generateUniqueFilename = (file: Blob): string => {
+  const uniqueSuffix = `${Date.now()}`
+  const fileExtension = extname(file.name)
+  const originalFilename = file.name.replace(/\.[^/.]+$/, '')
+  const sanitizedFilename = sanitizeFilename(originalFilename)
+
+  return `${sanitizedFilename}_${uniqueSuffix}${fileExtension}`
+}
+
+export const createUploadDir = async (uploadDir: string) => {
+  try {
+    await stat(uploadDir)
+  } catch (error: any) {
+    if (error.code === 'ENOENT') {
+      await mkdir(uploadDir, { recursive: true })
+    } else {
+      throw new ClientError('Failed to create upload directory', 500)
+    }
+  }
 }
