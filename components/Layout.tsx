@@ -2,10 +2,11 @@
 
 import { useRouter } from 'next/navigation'
 import { HomeOutlined } from '@ant-design/icons'
-import { Layout, theme, message } from 'antd'
+import { Layout, theme } from 'antd'
 import MenuItem from './MenuItem'
 import { deleteCookie } from 'cookies-next'
 import Swal from 'sweetalert2'
+import { toast } from 'react-toastify'
 
 const { Content, Sider } = Layout
 
@@ -24,7 +25,7 @@ const App = ({ children }: ChildrenProps) => {
       cancelButtonText: 'No',
     }).then((result) => {
       if (result.isConfirmed) {
-        message.info('You have been logged out')
+        toast.info('You have been logged out')
         setTimeout(() => {
           deleteCookie('token')
           router.push('/auth/login')

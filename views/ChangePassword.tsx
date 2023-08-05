@@ -2,9 +2,11 @@
 
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Form, Input, Button, message } from 'antd'
+import { Form, Input, Button } from 'antd'
 import { getCookie, hasCookie } from 'cookies-next'
 import Swal from 'sweetalert2'
+import { toast } from 'react-toastify'
+
 const { Item } = Form
 const { Password } = Input
 
@@ -40,9 +42,9 @@ const ChangePassword = () => {
           const res = (await response.json()) as BaseResponse
 
           if (!res.success) {
-            return message.error(res.message)
+            return toast.error(res.message)
           }
-          message.info(res.message)
+          toast.info(res.message)
           form.resetFields()
         } catch (error) {
           console.log(error)

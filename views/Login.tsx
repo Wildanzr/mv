@@ -2,9 +2,11 @@
 
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Form, Input, Button, message } from 'antd'
+import { Form, Input, Button } from 'antd'
 import { setCookie } from 'cookies-next'
 import Swal from 'sweetalert2'
+import { toast } from 'react-toastify'
+
 const { Item } = Form
 const { Password } = Input
 
@@ -28,10 +30,10 @@ const Login = () => {
       const res = (await response.json()) as LoginResponse
 
       if (!res.success) {
-        return message.error(res.message)
+        return toast.error(res.message)
       }
 
-      message.info(res.message)
+      toast.info(res.message)
       setCookie('token', res.data.token, {
         maxAge: 15 * 60,
       })

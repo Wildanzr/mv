@@ -4,8 +4,10 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Form, Input, Button, message } from 'antd'
+import { Form, Input, Button } from 'antd'
 import Swal from 'sweetalert2'
+import { toast } from 'react-toastify'
+
 const { Item } = Form
 const { Password } = Input
 
@@ -66,7 +68,11 @@ const Register = () => {
       })
 
       const data = (await res.json()) as RegisterResponse
-      message.success(data.message)
+
+      if (!data.success) {
+        return toast.error(data.message)
+      }
+      toast.success(data.message)
 
       setTimeout(() => {
         router.push('/auth/login')
