@@ -1,9 +1,10 @@
 'use client'
 
-import React from 'react'
+import { useRouter } from 'next/navigation'
 import { HomeOutlined } from '@ant-design/icons'
 import { Layout, theme } from 'antd'
 import MenuItem from './MenuItem'
+import { deleteCookie } from 'cookies-next'
 
 const { Content, Sider } = Layout
 
@@ -11,6 +12,12 @@ const App = ({ children }: ChildrenProps) => {
   const {
     token: { colorBgContainer },
   } = theme.useToken()
+  const router = useRouter()
+
+  const logout = () => {
+    deleteCookie('token')
+    router.push('/auth/login')
+  }
 
   return (
     <Layout className="w-full h-full">
@@ -23,7 +30,12 @@ const App = ({ children }: ChildrenProps) => {
             <MenuItem href="/dash/posts" label="Post" />
           </div>
 
-          <button className="bg-red-600 w-full py-2 text-base text-white">Logout</button>
+          <button
+            className="bg-red-600 w-full py-2 text-base text-white"
+            onClick={() => logout()}
+          >
+            Logout
+          </button>
         </div>
       </Sider>
       <Layout>
