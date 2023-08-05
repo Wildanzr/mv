@@ -1,5 +1,7 @@
 // types dto.d.ts
 
+import { extend } from 'joi'
+
 export {}
 
 declare global {
@@ -124,25 +126,24 @@ declare global {
     username: string
     password: string
   }
-  interface LoginResponse {
+  interface BaseResponse {
     success: boolean
     message: string
+    data: any
+  }
+  interface LoginResponse extends BaseResponse {
     data: {
       token: string
     }
   }
-  interface UploadImageResponse {
-    success: boolean
-    message: string
+  interface UploadImageResponse extends BaseResponse {
     data: {
       filename: string
       mimetype: string
       url: string
     }
   }
-  interface RegisterResponse {
-    success: boolean
-    message: string
+  interface RegisterResponse extends BaseResponse {
     data: {
       name: string
       username: string
@@ -150,9 +151,15 @@ declare global {
       photo: string
     }
   }
-  interface BaseResponse {
-    success: boolean
-    message: string
-    data: any
+
+  interface GetUserResponse extends BaseResponse {
+    data: {
+      name: string
+      username: string
+      email: string
+      photo: string
+      createdAt: Date
+      updatedAt: Date
+    }
   }
 }

@@ -12,4 +12,12 @@ declare global {
     label?: string
     className?: string
   }
+  interface UpdateProfileFormProps {
+    profile: DetailUser
+    onFinish: (values: any) => void
+    isEditing: boolean
+    handleImageChange: (e: any) => void
+    selectedImage: any
+    setIsEditing: (value: boolean) => void
+  }
 }
