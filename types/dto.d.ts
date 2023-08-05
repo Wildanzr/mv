@@ -131,4 +131,23 @@ declare global {
       token: string
     }
   }
+  interface UploadImageResponse {
+    success: boolean
+    message: string
+    data: {
+      filename: string
+      mimetype: string
+      url: string
+    }
+  }
+  interface RegisterResponse {
+    success: boolean
+    message: string
+    data: {
+      name: string
+      username: string
+      email: string
+      photo: string
+    }
+  }
 }

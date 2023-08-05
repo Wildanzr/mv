@@ -11,3 +11,8 @@
 .menu_item {
   @apply w-full flex flex-row space-x-2 items-center justify-center text-center text-white text-base py-2 hover:font-bold hover:bg-gray-700 duration-150 ease-in;
 }
+
+/* Fix css conflict between antd and tailwindcss  */
+img {
+  display: unset !important;
+}

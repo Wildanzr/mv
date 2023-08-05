@@ -13,7 +13,7 @@ const RootLayout = ({ children }: ChildrenProps) => (
     <body className={inter.className}>
       <StyledComponentsRegistry>
         <ConfigProvider theme={theme}>
-          <main className="flex flex-col space-y-5 items-center justify-center w-full h-screen bg-gray-50">
+          <main className="flex flex-col space-y-5 items-center justify-center w-full h-full min-h-screen bg-gray-50">
             {children}
           </main>
         </ConfigProvider>

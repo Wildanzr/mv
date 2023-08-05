@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Form, Input, Button, message } from 'antd'
 import { setCookie } from 'cookies-next'
@@ -67,6 +68,9 @@ const Login = () => {
             Login
           </Button>
         </Item>
+        <Link href="/auth/register" className="flex w-full items-center justify-center">
+          Register
+        </Link>
       </Form>
     </section>
   )
