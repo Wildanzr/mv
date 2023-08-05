@@ -120,4 +120,15 @@ declare global {
       photo: string
     }
   }
+  interface Credentials {
+    username: string
+    password: string
+  }
+  interface LoginResponse {
+    success: boolean
+    message: string
+    data: {
+      token: string
+    }
+  }
 }
