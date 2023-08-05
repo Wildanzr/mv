@@ -53,10 +53,8 @@ const App = ({ children }: ChildrenProps) => {
         </div>
       </Sider>
       <Layout>
-        <Content style={{ margin: '24px 16px 0' }}>
-          <div style={{ padding: 24, minHeight: 600, background: colorBgContainer }}>
-            {children}
-          </div>
+        <Content>
+          <div className="w-full h-full bg-gray-50 p-4">{children}</div>
         </Content>
       </Layout>
     </Layout>

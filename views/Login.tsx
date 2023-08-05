@@ -46,7 +46,7 @@ const Login = () => {
   }
 
   return (
-    <section className="flex flex-col space-y-5 w-full max-w-sm px-4 py-4 rounJded-md bg-gray-200">
+    <section className="flex flex-col space-y-5 w-full max-w-sm px-4 py-4 rounJded-md bg-gray-200 rounded-md">
       <h1 className="text-2xl font-bold text-center">Login</h1>
 
       <Form name="loginForm" className="w-full" onFinish={onFinish}>
@@ -68,8 +68,7 @@ const Login = () => {
           name="password"
           rules={[
             { required: true, message: 'Please input your password!' },
-            { min: 8, message: 'Password must be at least 8 characters long' },
-            { max: 20, message: 'Password must be at most 50 characters long' },
+            { max: 50, message: 'Password must be at most 50 characters long' },
           ]}
         >
           <Password placeholder="Password" />

@@ -37,8 +37,8 @@ const Register = () => {
     }
   }
 
-  const onFinish = async (e: any) => {
-    const { name, username, email, password } = e
+  const onFinish = async (values: RegisterDTO) => {
+    const { name, username, email, password } = values
     Swal.fire({
       title: 'Registering...',
       allowOutsideClick: false,

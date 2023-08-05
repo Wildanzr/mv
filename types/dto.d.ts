@@ -150,4 +150,9 @@ declare global {
       photo: string
     }
   }
+  interface BaseResponse {
+    success: boolean
+    message: string
+    data: any
+  }
 }
