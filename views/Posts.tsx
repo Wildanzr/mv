@@ -100,7 +100,7 @@ const Posts = () => {
         setTotal={setTotal}
         setPage={setPage}
       />
-      <DisplayPosts posts={posts} deletePost={deletePost} />
+      <DisplayPosts posts={posts} deletePost={deletePost} setFetcher={setFetcher} />
       <CreatePostForm isOpen={createModal} setIsOpen={setCreateModal} />
       <FloatButton
         icon={<PlusCircleFilled />}

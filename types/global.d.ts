@@ -24,6 +24,10 @@ declare global {
     isOpen: boolean
     setIsOpen: (value: boolean) => void
   }
+  interface UpdatePostFormProps extends CreatePostFormProps {
+    post: PostDetail
+    setFetcher: (value: boolean) => void
+  }
   interface SearchFormProps {
     search: string
     setSearch: (value: string) => void
@@ -34,10 +38,12 @@ declare global {
   interface DisplayPostProps {
     posts: PostDetail[]
     deletePost: (id: number) => void
+    setFetcher: (value: boolean) => void
   }
 
   interface PostProps {
     post: PostDetail
     deletePost: (id: number) => void
+    setFetcher: (value: boolean) => void
   }
 }
