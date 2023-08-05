@@ -31,4 +31,13 @@ declare global {
     setTotal: (value: number) => void
     setPage: (value: number) => void
   }
+  interface DisplayPostProps {
+    posts: PostDetail[]
+    deletePost: (id: number) => void
+  }
+
+  interface PostProps {
+    post: PostDetail
+    deletePost: (id: number) => void
+  }
 }

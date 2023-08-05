@@ -1,9 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { FloatButton } from 'antd'
 import { PlusCircleFilled } from '@ant-design/icons'
-import { CreatePostForm, SearchForm } from '@/components'
+import { CreatePostForm, SearchForm, DisplayPosts } from '@/components'
 import { getCookie } from 'cookies-next'
 import Swal from 'sweetalert2'
 
@@ -18,7 +18,7 @@ const Posts = () => {
   const [mode, setMode] = useState<string>('caption')
   const [loading, setLoading] = useState<boolean>(false)
 
-  const fetchPosts = async () => {
+  const fetchPosts = useCallback(async () => {
     Swal.fire({
       title: 'Fetching posts...',
       allowOutsideClick: false,
@@ -45,6 +45,37 @@ const Posts = () => {
       Swal.close()
       setFetcher(false)
     }
+  }, [limit, mode, page, search])
+
+  const deletePost = async (id: number) => {
+    Swal.fire({
+      title: 'Are you sure to delete this post?',
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'No',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const res = await fetch(`/api/v1/post/${id}`, {
+            method: 'DELETE',
+            headers: {
+              Authorization: `Bearer ${getCookie('token')}`,
+            },
+          })
+
+          const response = await res.json()
+          if (response.status === 'success') {
+            Swal.fire({
+              title: 'Post deleted!',
+              icon: 'success',
+            })
+          }
+          setFetcher(true)
+        } catch (error) {
+          console.log(error)
+        }
+      }
+    })
   }
 
   const openCreateModal = () => setCreateModal(true)
@@ -54,8 +85,14 @@ const Posts = () => {
       fetchPosts()
     }
   }, [])
+
+  useEffect(() => {
+    if (fetcher) {
+      fetchPosts()
+    }
+  }, [fetcher, page, limit, mode, search, fetchPosts])
   return (
-    <div className="flex flex-col w-full h-full">
+    <div className="flex flex-col w-full overflow-y-auto space-y-4">
       <SearchForm
         search={search}
         setSearch={setSearch}
@@ -63,6 +100,7 @@ const Posts = () => {
         setTotal={setTotal}
         setPage={setPage}
       />
+      <DisplayPosts posts={posts} deletePost={deletePost} />
       <CreatePostForm isOpen={createModal} setIsOpen={setCreateModal} />
       <FloatButton
         icon={<PlusCircleFilled />}
