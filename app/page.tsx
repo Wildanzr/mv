@@ -8,9 +8,9 @@ export const metadata: Metadata = {
 
 const HomePage = () => {
   return (
-    <>
+    <main className="flex w-full h-full">
       <Home />
-    </>
+    </main>
   )
 }
 

@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Form, Input, Button, message } from 'antd'
 import { setCookie } from 'cookies-next'
+import Swal from 'sweetalert2'
 const { Item } = Form
 const { Password } = Input
 
@@ -11,6 +12,13 @@ const Login = () => {
   const router = useRouter()
 
   const onFinish = async (credential: Credentials) => {
+    Swal.fire({
+      title: 'Logging in...',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading()
+      },
+    })
     try {
       const response = await fetch(`/api/v1/auth/login`, {
         method: 'POST',
@@ -27,9 +35,13 @@ const Login = () => {
       setCookie('token', res.data.token, {
         maxAge: 15 * 60,
       })
-      router.push('/')
+      setTimeout(() => {
+        router.push('/')
+      }, 500)
     } catch (error) {
       console.log(error)
+    } finally {
+      Swal.close()
     }
   }
 
