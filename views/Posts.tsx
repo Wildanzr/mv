@@ -3,12 +3,12 @@
 import { useState } from 'react'
 import { FloatButton } from 'antd'
 import { PlusCircleFilled } from '@ant-design/icons'
-import { CreatePostForm } from '@/components'
+import { CreatePostForm, SearchForm } from '@/components'
 
 const Posts = () => {
   const [createModal, setCreateModal] = useState<boolean>(false)
   const [search, setSearch] = useState<string>('')
-  const [posts, setPosts] = useState([])
+  const [posts, setPosts] = useState<Post[]>([])
   const [fetch, setFetch] = useState<boolean>(true)
   const [page, setPage] = useState<number>(1)
   const [total, setTotal] = useState<number>(0)
@@ -17,6 +17,13 @@ const Posts = () => {
   const openCreateModal = () => setCreateModal(true)
   return (
     <div className="flex flex-col w-full h-full">
+      <SearchForm
+        search={search}
+        setSearch={setSearch}
+        setPost={setPosts}
+        setTotal={setTotal}
+        setPage={setPage}
+      />
       <CreatePostForm isOpen={createModal} setIsOpen={setCreateModal} />
       <FloatButton
         icon={<PlusCircleFilled />}

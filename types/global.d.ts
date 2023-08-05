@@ -24,4 +24,11 @@ declare global {
     isOpen: boolean
     setIsOpen: (value: boolean) => void
   }
+  interface SearchFormProps {
+    search: string
+    setSearch: (value: string) => void
+    setPost: (value: Post[]) => void
+    setTotal: (value: number) => void
+    setPage: (value: number) => void
+  }
 }
