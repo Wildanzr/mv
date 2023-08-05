@@ -93,14 +93,9 @@ const Posts = () => {
   }, [fetcher, page, limit, mode, search, fetchPosts])
   return (
     <div className="flex flex-col w-full overflow-y-auto space-y-4">
-      <SearchForm
-        search={search}
-        setSearch={setSearch}
-        setPost={setPosts}
-        setTotal={setTotal}
-        setPage={setPage}
-      />
+      <SearchForm setSearch={setSearch} setMode={setMode} setFetcher={setFetcher} />
       <DisplayPosts posts={posts} deletePost={deletePost} setFetcher={setFetcher} />
+      {/* Todo pagination */}
       <CreatePostForm isOpen={createModal} setIsOpen={setCreateModal} />
       <FloatButton
         icon={<PlusCircleFilled />}

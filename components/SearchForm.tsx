@@ -5,20 +5,16 @@ import { Input, Select } from 'antd'
 
 const { Search } = Input
 
-const SearchForm = ({
-  search,
-  setSearch,
-  setPost,
-  setTotal,
-  setPage,
-}: SearchFormProps) => {
-  const [mode, setMode] = useState<string>('caption')
+const SearchForm = ({ setSearch, setFetcher, setMode }: SearchFormProps) => {
+  const [localMode, setLocalMode] = useState<string>('caption')
   const onSearch = (value: string) => {
-    console.log(mode, value)
+    setSearch(value)
+    setMode(localMode)
+    setTimeout(() => setFetcher(true), 300)
   }
 
   const handleChange = (value: string) => {
-    setMode(value)
+    setLocalMode(value)
   }
   return (
     <div className="flex flex-row space-x-3 w-full h-full">

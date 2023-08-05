@@ -29,11 +29,9 @@ declare global {
     setFetcher: (value: boolean) => void
   }
   interface SearchFormProps {
-    search: string
     setSearch: (value: string) => void
-    setPost: (value: PostDetail[]) => void
-    setTotal: (value: number) => void
-    setPage: (value: number) => void
+    setMode: (value: string) => void
+    setFetcher: (value: boolean) => void
   }
   interface DisplayPostProps {
     posts: PostDetail[]
