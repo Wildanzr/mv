@@ -35,8 +35,6 @@ const Profile = () => {
 
       const data = (await res.json()) as GetUserResponse
       if (data.success) {
-        console.log('here')
-        console.log(data.data)
         setProfile({
           ...data.data,
         })
@@ -81,47 +79,58 @@ const Profile = () => {
   }
 
   const onFinish = async (values: RegisterDTO) => {
-    const { name, username, email, password, photo } = values
     Swal.fire({
-      title: 'Updating profile...',
-      allowOutsideClick: false,
-      didOpen: () => {
-        Swal.showLoading()
-      },
+      title: 'Are you sure to update your profile?',
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'No',
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const { name, username, email, password, photo } = values
+        Swal.fire({
+          title: 'Updating profile...',
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading()
+          },
+        })
+
+        try {
+          const payload = {
+            name,
+            username,
+            email,
+            password,
+            photo: profile.photo,
+          }
+          if (selectedImage) {
+            const image = await uploadImage()
+            payload.photo = image as string
+          }
+          const res = await fetch('/api/v1/user', {
+            method: 'PUT',
+            body: JSON.stringify(payload),
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: 'Bearer ' + getCookie('token'),
+            },
+          })
+          const data = (await res.json()) as RegisterResponse
+          if (!data.success) {
+            return toast.error(data.message)
+          }
+          toast.success(data.message)
+
+          setIsEditing(false)
+        } catch (error) {
+          console.log(error)
+        } finally {
+          Swal.close()
+        }
+      }
     })
-
-    try {
-      const payload = {
-        name,
-        username,
-        email,
-        password,
-        photo: profile.photo,
-      }
-      if (selectedImage) {
-        const image = await uploadImage()
-        payload.photo = image as string
-      }
-      const res = await fetch('/api/v1/user', {
-        method: 'PUT',
-        body: JSON.stringify(payload),
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + getCookie('token'),
-        },
-      })
-      const data = (await res.json()) as RegisterResponse
-      if (!data.success) {
-        return toast.error(data.message)
-      }
-      toast.success(data.message)
-
-      setIsEditing(false)
-    } catch (error) {
-      console.log(error)
-    } finally {
-      Swal.close()
-    }
   }
 
   useEffect(() => {

@@ -35,7 +35,7 @@ const Login = () => {
 
       toast.info(res.message)
       setCookie('token', res.data.token, {
-        maxAge: 15 * 60,
+        maxAge: 60 * 60 * 24 * 15, // due development
       })
       setTimeout(() => {
         router.push('/')

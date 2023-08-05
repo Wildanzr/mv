@@ -20,4 +20,8 @@ declare global {
     selectedImage: any
     setIsEditing: (value: boolean) => void
   }
+  interface CreatePostFormProps {
+    isOpen: boolean
+    setIsOpen: (value: boolean) => void
+  }
 }

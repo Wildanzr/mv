@@ -162,4 +162,15 @@ declare global {
       updatedAt: Date
     }
   }
+  interface CreatePostResponse extends BaseResponse {
+    data: {
+      image: string
+      caption: string
+      tags: string
+      likes: number
+      createdAt: Date
+      updatedAt: Date
+      user: DetailUser
+    }
+  }
 }
