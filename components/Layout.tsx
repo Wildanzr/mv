@@ -2,9 +2,10 @@
 
 import { useRouter } from 'next/navigation'
 import { HomeOutlined } from '@ant-design/icons'
-import { Layout, theme } from 'antd'
+import { Layout, theme, message } from 'antd'
 import MenuItem from './MenuItem'
 import { deleteCookie } from 'cookies-next'
+import Swal from 'sweetalert2'
 
 const { Content, Sider } = Layout
 
@@ -15,8 +16,21 @@ const App = ({ children }: ChildrenProps) => {
   const router = useRouter()
 
   const logout = () => {
-    deleteCookie('token')
-    router.push('/auth/login')
+    Swal.fire({
+      title: 'Are you sure to logout?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'No',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        message.info('You have been logged out')
+        setTimeout(() => {
+          deleteCookie('token')
+          router.push('/auth/login')
+        }, 500)
+      }
+    })
   }
 
   return (
