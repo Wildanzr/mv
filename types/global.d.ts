@@ -27,7 +27,7 @@ declare global {
   interface SearchFormProps {
     search: string
     setSearch: (value: string) => void
-    setPost: (value: Post[]) => void
+    setPost: (value: PostDetail[]) => void
     setTotal: (value: number) => void
     setPage: (value: number) => void
   }

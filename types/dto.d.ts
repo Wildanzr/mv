@@ -173,4 +173,17 @@ declare global {
       user: DetailUser
     }
   }
+  interface PostDetail {
+    id: number
+    image: string
+    caption: string
+    tags: string
+    likes: number
+    createdAt: Date
+    updatedAt: Date
+    user: DetailUser
+  }
+  interface FetchPostResponse extends BaseResponse {
+    data: [post: PostDetail]
+  }
 }
