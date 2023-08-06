@@ -4,7 +4,7 @@ import { connectDB } from '@/utils/database'
 import { formatErrorResponse, success } from '@/utils/response'
 import { getTokenFromRequest, verifyToken } from '@/utils/tokenization'
 import { createPostSchema, postQuerySchema, validatePayload } from '@/validators'
-import { NextApiRequest } from 'next'
+import { NextRequest } from 'next/server'
 
 export const POST = async (req: Request) => {
   /* 
@@ -45,7 +45,7 @@ export const POST = async (req: Request) => {
   }
 }
 
-export const GET = async (req: NextApiRequest) => {
+export const GET = async (req: NextRequest) => {
   /*
     Get list post flow:
     1. Check authorization header

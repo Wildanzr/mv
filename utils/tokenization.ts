@@ -7,7 +7,7 @@ const HOST_URL = process.env.HOST_URL || 'http://localhost:3000'
 export const signToken = (user: User) => {
   return jwt.sign({ _id: user._id }, SECRET, {
     algorithm: 'HS256',
-    expiresIn: '15d', // temporary due development
+    expiresIn: '15m',
     subject: user.username,
     issuer: HOST_URL,
   })
