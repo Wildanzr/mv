@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { FloatButton, Spin } from 'antd'
 import { PlusCircleFilled } from '@ant-design/icons'
-import { CreatePostForm, SearchForm, DisplayPosts } from '@/components'
+import { CreatePostForm, SearchForm, DisplayPosts, PostPagination } from '@/components'
 import { getCookie, hasCookie } from 'cookies-next'
 import Swal from 'sweetalert2'
 
@@ -89,8 +89,7 @@ const Posts = () => {
   useEffect(() => {
     if (!hasCookie('token')) {
       router.push('/auth/login')
-    }
-    if (fetcher) {
+    } else if (fetcher) {
       fetchPosts()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -102,24 +101,33 @@ const Posts = () => {
     }
   }, [fetcher, page, limit, mode, search, fetchPosts])
   return (
-    <div className="flex flex-col w-full overflow-y-auto space-y-4">
+    <div className="flex flex-col w-full overflow-y-auto items-center justify-between space-y-4">
       <SearchForm setSearch={setSearch} setMode={setMode} setFetcher={setFetcher} />
       {loading ? null : (
         <DisplayPosts posts={posts} deletePost={deletePost} setFetcher={setFetcher} />
       )}
 
-      <CreatePostForm
-        isOpen={createModal}
-        setIsOpen={setCreateModal}
-        setFetcher={setFetcher}
-      />
-      <FloatButton
-        icon={<PlusCircleFilled />}
-        type="primary"
-        style={{ right: 24 }}
-        className="bg-blue-700"
-        onClick={openCreateModal}
-      />
+      <div className="flex w-full items-center justify-center">
+        <PostPagination
+          total={total}
+          setFetcher={setFetcher}
+          setPage={setPage}
+          setLimit={setLimit}
+        />
+
+        <CreatePostForm
+          isOpen={createModal}
+          setIsOpen={setCreateModal}
+          setFetcher={setFetcher}
+        />
+        <FloatButton
+          icon={<PlusCircleFilled />}
+          type="primary"
+          style={{ right: 24 }}
+          className="bg-blue-700"
+          onClick={openCreateModal}
+        />
+      </div>
     </div>
   )
 }

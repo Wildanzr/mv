@@ -45,4 +45,10 @@ declare global {
     deletePost: (id: number) => void
     setFetcher: (value: boolean) => void
   }
+  interface PostPaginatinoProps {
+    total: number
+    setPage: (value: number) => void
+    setLimit: (value: number) => void
+    setFetcher: (value: boolean) => void
+  }
 }
