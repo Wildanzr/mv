@@ -2,16 +2,17 @@
 
 import { useState } from 'react'
 import { Input, Select } from 'antd'
+import debounce from 'debounce-promise'
 
 const { Search } = Input
 
 const SearchForm = ({ setSearch, setFetcher, setMode }: SearchFormProps) => {
   const [localMode, setLocalMode] = useState<string>('caption')
-  const onSearch = (value: string) => {
+  const onSearch = debounce((value: string) => {
     setSearch(value)
     setMode(localMode)
-    setTimeout(() => setFetcher(true), 300)
-  }
+    setFetcher(true)
+  }, 300)
 
   const handleChange = (value: string) => {
     setLocalMode(value)
@@ -27,7 +28,7 @@ const SearchForm = ({ setSearch, setFetcher, setMode }: SearchFormProps) => {
           { value: 'tags', label: 'Tags' },
         ]}
       />
-      <Search placeholder="input search text" onSearch={onSearch} enterButton />
+      <Search placeholder="Search posts" onChange={(e) => onSearch(e.target.value)} />
     </div>
   )
 }

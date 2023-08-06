@@ -26,7 +26,15 @@ const Post = ({ post, deletePost, setFetcher }: PostProps) => {
 
   return (
     <div className="rounded overflow-hidden text-gray-900 hover:shadow-lg transition-shadow duration-300 ease-in-out bg-slate-100">
-      <Image className="w-full" src={image} alt={'Post image'} width={200} height={60} />
+      <div className="flex w-full h-40 bg-slate-50">
+        <Image
+          className="object-cover object-center"
+          src={image}
+          alt={'Post image'}
+          width={1000}
+          height={1000}
+        />
+      </div>
       <div className="flex flex-col px-6 py-4">
         <div className="flex flex-row space-x-2">
           <HeartTwoTone

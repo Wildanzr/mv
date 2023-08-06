@@ -1,10 +1,11 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { FloatButton } from 'antd'
+import { useRouter } from 'next/navigation'
+import { FloatButton, Spin } from 'antd'
 import { PlusCircleFilled } from '@ant-design/icons'
 import { CreatePostForm, SearchForm, DisplayPosts } from '@/components'
-import { getCookie } from 'cookies-next'
+import { getCookie, hasCookie } from 'cookies-next'
 import Swal from 'sweetalert2'
 
 const Posts = () => {
@@ -16,9 +17,12 @@ const Posts = () => {
   const [limit, setLimit] = useState<number>(10)
   const [total, setTotal] = useState<number>(0)
   const [mode, setMode] = useState<string>('caption')
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(true)
+
+  const router = useRouter()
 
   const fetchPosts = useCallback(async () => {
+    setLoading(true)
     Swal.fire({
       title: 'Fetching posts...',
       allowOutsideClick: false,
@@ -38,12 +42,14 @@ const Posts = () => {
       )
 
       const response = (await res.json()) as FetchPostResponse
+      console.log(response)
       setPosts(response.data)
     } catch (error) {
       console.log(error)
     } finally {
       Swal.close()
       setFetcher(false)
+      setLoading(false)
     }
   }, [limit, mode, page, search])
 
@@ -81,9 +87,13 @@ const Posts = () => {
   const openCreateModal = () => setCreateModal(true)
 
   useEffect(() => {
+    if (!hasCookie('token')) {
+      router.push('/auth/login')
+    }
     if (fetcher) {
       fetchPosts()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -94,9 +104,15 @@ const Posts = () => {
   return (
     <div className="flex flex-col w-full overflow-y-auto space-y-4">
       <SearchForm setSearch={setSearch} setMode={setMode} setFetcher={setFetcher} />
-      <DisplayPosts posts={posts} deletePost={deletePost} setFetcher={setFetcher} />
-      {/* Todo pagination */}
-      <CreatePostForm isOpen={createModal} setIsOpen={setCreateModal} />
+      {loading ? null : (
+        <DisplayPosts posts={posts} deletePost={deletePost} setFetcher={setFetcher} />
+      )}
+
+      <CreatePostForm
+        isOpen={createModal}
+        setIsOpen={setCreateModal}
+        setFetcher={setFetcher}
+      />
       <FloatButton
         icon={<PlusCircleFilled />}
         type="primary"

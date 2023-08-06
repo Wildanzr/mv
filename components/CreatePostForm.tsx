@@ -10,7 +10,7 @@ import { toast } from 'react-toastify'
 const { TextArea } = Input
 const { Item } = Form
 
-const CreatePostForm = ({ isOpen, setIsOpen }: CreatePostFormProps) => {
+const CreatePostForm = ({ isOpen, setIsOpen, setFetcher }: CreatePostFormProps) => {
   const [form] = Form.useForm()
   const [selectedImage, setSelectedImage] = useState<File | null>(null)
 
@@ -75,6 +75,7 @@ const CreatePostForm = ({ isOpen, setIsOpen }: CreatePostFormProps) => {
       const data = (await res.json()) as CreatePostResponse
       toast.success(data.message)
       closeModal()
+      setFetcher(true)
     } catch (error) {
       console.log(error)
     } finally {

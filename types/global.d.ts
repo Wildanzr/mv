@@ -23,6 +23,7 @@ declare global {
   interface CreatePostFormProps {
     isOpen: boolean
     setIsOpen: (value: boolean) => void
+    setFetcher: (value: boolean) => void
   }
   interface UpdatePostFormProps extends CreatePostFormProps {
     post: PostDetail

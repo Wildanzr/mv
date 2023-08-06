@@ -31,6 +31,7 @@ const UpdatePostForm = ({ isOpen, setIsOpen, post, setFetcher }: UpdatePostFormP
       return data.data.url
     } catch (error) {
       console.log(error)
+      throw error
     }
   }
 
@@ -43,10 +44,6 @@ const UpdatePostForm = ({ isOpen, setIsOpen, post, setFetcher }: UpdatePostFormP
   }
 
   const onFinish = async (values: CreatePostDTO) => {
-    if (!selectedImage) {
-      toast.error('Please upload an image first!')
-      return
-    }
     Swal.fire({
       title: 'Updating post...',
       allowOutsideClick: false,
@@ -56,7 +53,11 @@ const UpdatePostForm = ({ isOpen, setIsOpen, post, setFetcher }: UpdatePostFormP
     })
 
     try {
-      const image = await uploadImage()
+      let image = post.image
+      if (selectedImage) {
+        image = (await uploadImage()) as string
+      }
+
       const payload = {
         caption: values.caption,
         tags: values.tags,
